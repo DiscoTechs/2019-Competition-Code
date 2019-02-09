@@ -29,11 +29,11 @@ public class TeleDrive extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    double lstick = -OI.xbox.getRawAxis(RobotMap.LEFT_AXIS);
-    double rstick = -OI.xbox.getRawAxis(RobotMap.RIGHT_AXIS);
-    lstick = lstick*lstick;
-    rstick = rstick*rstick;
-    Robot.drive.vDrive(lstick, rstick);
+    double lspeed = -OI.lstick.getRawAxis(RobotMap.DRIVE_HORZ_AXIS);
+    double rspeed = -OI.rstick.getRawAxis(RobotMap.DRIVE_VERT_AXIS);
+    lspeed = Math.copySign(1, lspeed)*lspeed*lspeed;
+    rspeed = Math.copySign(1, rspeed)*rspeed*rspeed;
+    Robot.drive.vDrive(lspeed, rspeed);
 
   }
 

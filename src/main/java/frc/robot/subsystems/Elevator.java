@@ -23,14 +23,14 @@ public class Elevator extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
   private TalonSRX elevator = new TalonSRX(RobotMap.ELEVATOR);
-  private TalonSRX arm = new TalonSRX(RobotMap.ELEVATOR);
+  private TalonSRX arm = new TalonSRX(RobotMap.ARM);
 
   public Elevator() {
 
   }
 
   @Override
-  public void initDefaultCommand() {
+  public void initDefaultCommand() { 
     // Set the default command for a subsystem here.
     setDefaultCommand(new TeleArm());
   }
@@ -56,22 +56,22 @@ public class Elevator extends Subsystem {
   }
 
   public void armUp() {
-    move(.25);
+    moveArm(.25);
   }
 
   public void armUp(double speed) {
-    move(speed);
+    moveArm(speed);
   }
 
   public void armStop() {
-    move(0);
+    moveArm(0);
   }
 
   public void armDown() {
-    move(-.25);
+    moveArm(-.25);
   }
 
   public void armDown(double speed) {
-    move(-speed);
+    moveArm(-speed);
   }
 } 

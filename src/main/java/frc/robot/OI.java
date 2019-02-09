@@ -11,6 +11,10 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.command.Command;
+import frc.robot.commands.LiftJack.LiftRobot;
+import frc.robot.commands.LiftJack.RetractCenter;
+import frc.robot.commands.LiftJack.RetractFront;
+import frc.robot.commands.LiftJack.StopLiftJack;
 import frc.robot.commands.drive.DriveToPos;
 import frc.robot.commands.drive.ResetEncoders;
 import frc.robot.commands.drive.TeleDrive;
@@ -20,6 +24,7 @@ import frc.robot.commands.elevator.ElevatorArmUp;
 import frc.robot.commands.elevator.ElevatorDown;
 import frc.robot.commands.elevator.ElevatorStop;
 import frc.robot.commands.elevator.ElevatorUp;
+import frc.robot.commands.elevator.TeleArm;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -54,25 +59,45 @@ public class OI {
   // until it is finished as determined by it's isFinished method.
   // button.whenReleased(new ExampleCommand());
   public static Joystick xbox = new Joystick(RobotMap.XBOX);
+  
+  public static Joystick lstick = new Joystick(RobotMap.LEFT_AXIS);
+  public static Joystick rstick = new Joystick(RobotMap.RIGHT_AXIS);
+
   public OI(){
     
     Button aButton = new JoystickButton(xbox, RobotMap.A_BUTTON);
     Button bButton = new JoystickButton(xbox, RobotMap.B_BUTTON);
     Button xButton = new JoystickButton(xbox, RobotMap.X_BUTTON);
     Button yButton = new JoystickButton(xbox, RobotMap.Y_BUTTON);
+    Button rBumper = new JoystickButton(xbox, RobotMap.RIGHT_BUMPER);
+    Button lBumper = new JoystickButton(xbox, RobotMap.LEFT_BUMPER);
+    Button backButton = new JoystickButton(xbox, RobotMap.BACK_BUTTON);
 
-    yButton.whileHeld(new ElevatorUp());
-    yButton.whenReleased(new ElevatorStop());
 
+
+    //lift jack
+    rBumper.whenPressed(new LiftRobot());
+    rBumper.whenReleased(new StopLiftJack());
+
+    lBumper.whenPressed(new RetractFront());
+    lBumper.whenReleased(new StopLiftJack());
+
+    backButton.whenPressed(new RetractCenter());
+    backButton.whenReleased(new StopLiftJack());
+
+    //elevator
     aButton.whenPressed(new ElevatorDown());
     aButton.whenReleased(new ElevatorStop());
+    
+    bButton.whileHeld(new ElevatorUp());
+    bButton.whenReleased(new ElevatorStop());
 
-
-    xButton.whileHeld(new ElevatorArmUp());
+    // arm
+    xButton.whileHeld(new ElevatorArmDown());
     xButton.whenReleased(new ElevatorArmStop());
 
-    bButton.whenPressed(new ElevatorArmDown());
-    bButton.whenReleased(new ElevatorArmStop());
+    yButton.whenPressed(new ElevatorArmUp());
+    yButton.whenReleased(new ElevatorArmStop());
 
     //xButton.whenPressed(new ResetEncoders());
     //bButton.whenPressed(new DriveToPos(20_000));

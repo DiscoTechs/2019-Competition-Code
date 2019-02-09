@@ -24,13 +24,25 @@ public class RobotMap {
   // public static int rangefinderPort = 1;
   // public static int rangefinderModule = 1;
 
-  public static final int XBOX= 0;
+  // Main drive joysticks
+  public static final int LEFT_STICK = 0;
+  public static final int RIGHT_STICK = 1;
+  public static final int DRIVE_HORZ_AXIS = 0;
+  public static final int DRIVE_VERT_AXIS =  1;
+
+
+  // These are all for the xbox controller
+  public static final int XBOX= 2;
   public static final int LEFT_AXIS_HORZ = 0;
   public static final int LEFT_AXIS = 1;
   public static final int RIGHT_AXIS_HORZ = 4;
   public static final int RIGHT_AXIS = 5;
   public static final int RIGHT_TRIGGER = 3;
   public static final int LEFT_TRIGGER = 2;
+  public static final int RIGHT_BUMPER = 6;
+  public static final int LEFT_BUMPER = 5;
+  public static final int BACK_BUTTON = 7;
+  public static final int START_BUTTON = 8;
 
   public static final int A_BUTTON = 1;
   public static final int B_BUTTON = 2;
@@ -38,14 +50,26 @@ public class RobotMap {
   public static final int Y_BUTTON = 4;
   
 
+  //CAN IDs
   public static final int LEFT_MOTOR = 6;
   public static final int RIGHT_MOTOR = 3;
   public static final int ELEVATOR = 7;
+  public static final int ARM = 8;
 
   public static final int LEFT_LINE_SENSOR = 0;
   public static final int CENTER_LINE_SENSOR = 1;
   public static final int RIGHT_LINE_SENSOR = 3;
 
+  //PWM IDs
+
+  public static final int LEFT_JACK = 0;
+  public static final int CENTER_JACK = 1;
+  public static final int RIGHT_JACK = 2;
+
+  //LiftJack
+
+  public static final double LIFT_SPEED = .5;
+  public static final double RETRACT_SPEED = .7;
 
 
 }

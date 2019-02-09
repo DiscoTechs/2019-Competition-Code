@@ -30,7 +30,7 @@ public class ElevatorArmUp extends Command {
   @Override
   protected void execute() {
    
-    Robot.elevator.elevatorUp();
+    Robot.elevator.armUp();
 
   }
 
