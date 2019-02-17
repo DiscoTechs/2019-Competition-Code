@@ -11,7 +11,9 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.command.Command;
+import frc.robot.commands.LiftJack.DriveJack;
 import frc.robot.commands.LiftJack.LiftRobot;
+import frc.robot.commands.LiftJack.ResetJack;
 import frc.robot.commands.LiftJack.RetractCenter;
 import frc.robot.commands.LiftJack.RetractFront;
 import frc.robot.commands.LiftJack.StopLiftJack;
@@ -60,8 +62,8 @@ public class OI {
   // button.whenReleased(new ExampleCommand());
   public static Joystick xbox = new Joystick(RobotMap.XBOX);
   
-  public static Joystick lstick = new Joystick(RobotMap.LEFT_AXIS);
-  public static Joystick rstick = new Joystick(RobotMap.RIGHT_AXIS);
+  public static Joystick lstick = new Joystick(RobotMap.LEFT_STICK);
+  public static Joystick rstick = new Joystick(RobotMap.RIGHT_STICK);
 
   public OI(){
     
@@ -72,8 +74,11 @@ public class OI {
     Button rBumper = new JoystickButton(xbox, RobotMap.RIGHT_BUMPER);
     Button lBumper = new JoystickButton(xbox, RobotMap.LEFT_BUMPER);
     Button backButton = new JoystickButton(xbox, RobotMap.BACK_BUTTON);
+    Button startButton = new JoystickButton(xbox, RobotMap.START_BUTTON);
+    Button resetButton = new JoystickButton(xbox, 9);
 
-
+    //
+    Button rightButton3 = new JoystickButton(rstick, 3);
 
     //lift jack
     rBumper.whenPressed(new LiftRobot());
@@ -85,6 +90,10 @@ public class OI {
     backButton.whenPressed(new RetractCenter());
     backButton.whenReleased(new StopLiftJack());
 
+    rightButton3.whenPressed(new DriveJack(.30));
+    rightButton3.whenReleased(new DriveJack(0.0));
+
+    resetButton.whenPressed(new ResetJack());
     //elevator
     aButton.whenPressed(new ElevatorDown());
     aButton.whenReleased(new ElevatorStop());
@@ -101,6 +110,7 @@ public class OI {
 
     //xButton.whenPressed(new ResetEncoders());
     //bButton.whenPressed(new DriveToPos(20_000));
+
 
 
   }

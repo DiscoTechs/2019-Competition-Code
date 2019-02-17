@@ -10,13 +10,15 @@ package frc.robot.commands.LiftJack;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 
-public class LiftRobot extends Command {
+public class DriveJack extends Command {
 
+  private double speed = 0.0;
 
-  public LiftRobot() {
+  public DriveJack(double speed) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     requires(Robot.liftjack);
+    this.speed = speed;
   }
 
   // Called just before this Command runs the first time
@@ -27,9 +29,7 @@ public class LiftRobot extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-
-    Robot.liftjack.liftRobot();
-    
+    Robot.liftjack.driveJack(speed);
   }
 
   // Make this return true when this Command no longer needs to run execute()

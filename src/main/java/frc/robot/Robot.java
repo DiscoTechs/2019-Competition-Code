@@ -32,6 +32,7 @@ public class Robot extends TimedRobot {
   public static LiftJack liftjack = new LiftJack();
   public static OI m_oi;
   public static CameraServer cam;
+  public static DiscoDash dash = new DiscoDash();
 
   /**
    * This function is run when the robot is first started up and should be
@@ -59,6 +60,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    dash.update();
   }
 
   /**
@@ -116,6 +118,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     Scheduler.getInstance().run();
+    
   }
 
   /**

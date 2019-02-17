@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Robot;
 import frc.robot.RobotMap;
 import frc.robot.commands.drive.TeleDrive;
 
@@ -17,10 +18,12 @@ public class Drive extends Subsystem {
 
     // line tracers
     DigitalInput ltrace = new DigitalInput(RobotMap.LEFT_LINE_SENSOR);
+    DigitalInput rtrace = new DigitalInput(RobotMap.RIGHT_LINE_SENSOR);
+    DigitalInput ctrace = new DigitalInput(RobotMap.CENTER_LINE_SENSOR);
 
     public Drive(){
-        leftDrive.setInverted(true);
-        rightDrive.setInverted(false);
+        leftDrive.setInverted(false);
+        rightDrive.setInverted(true);
 
     }
 
@@ -58,9 +61,43 @@ public class Drive extends Subsystem {
         return rightDrive.getSelectedSensorPosition();
     }
 
+    double traceSpeed = 0.4;
     public void traceLine() {
         if (ltrace.get() == true) {
+            //drive right
+            leftDrive.set(ControlMode.PercentOutput, 0);
+            rightDrive.set(ControlMode.PercentOutput, traceSpeed);
             
         }
+        else if (rtrace.get() == true){
+//drive left
+         leftDrive.set(ControlMode.PercentOutput, traceSpeed);
+        rightDrive.set(ControlMode.PercentOutput, 0);
+            
+        } else if (ctrace.get() == true){
+
+            leftDrive.set(ControlMode.PercentOutput, 0);
+        rightDrive.set(ControlMode.PercentOutput, 0);
+
+        } else {
+
+        }
+
     }
+
+    public void driveAtAngle(double angle) {
+
+        double currentAngle = Robot.dash.getAngle();
+
+        if ( angle - currentAngle > 3 ){
+            //overdrive left
+        }
+        else if (angle - currentAngle < -3) {
+            // overdrive right
+        } else {
+            // drive equal
+        }
+
+    }
+    
 }

@@ -8,6 +8,8 @@
 package frc.robot.commands.drive;
 
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.DiscoDash;
 import frc.robot.OI;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
@@ -29,11 +31,16 @@ public class TeleDrive extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    double lspeed = -OI.lstick.getRawAxis(RobotMap.DRIVE_HORZ_AXIS);
-    double rspeed = -OI.rstick.getRawAxis(RobotMap.DRIVE_VERT_AXIS);
+    double lspeed = -OI.lstick.getRawAxis(RobotMap.EXTREME_Y);
+    double rspeed = -OI.rstick.getRawAxis(RobotMap.EXTREME_Y);
+    
     lspeed = Math.copySign(1, lspeed)*lspeed*lspeed;
     rspeed = Math.copySign(1, rspeed)*rspeed*rspeed;
     Robot.drive.vDrive(lspeed, rspeed);
+
+    // Since this command should (almost) always be running
+    // It it a good place to put the DashBoard call
+    // DiscoDash.update();
 
   }
 

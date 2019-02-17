@@ -24,11 +24,20 @@ public class RobotMap {
   // public static int rangefinderPort = 1;
   // public static int rangefinderModule = 1;
 
-  // Main drive joysticks
+  // Joytstic ports (check DriveStation)
   public static final int LEFT_STICK = 0;
   public static final int RIGHT_STICK = 1;
-  public static final int DRIVE_HORZ_AXIS = 0;
-  public static final int DRIVE_VERT_AXIS =  1;
+
+  // Logitech Attack 3 
+  public static final int ATTACK3_X = 0;
+  public static final int ATTACK3_Y =  1;
+  public static final int ATTACK3_DIAL =  2;
+  
+  // Logitech Extreme 3D Pro 
+  public static final int EXTREME_X = 0;
+  public static final int EXTREME_Y =  1;
+  public static final int EXTREME_ROTATE =  2;
+  public static final int EXTREME_DIAL =  2;
 
 
   // These are all for the xbox controller
@@ -53,23 +62,29 @@ public class RobotMap {
   //CAN IDs
   public static final int LEFT_MOTOR = 6;
   public static final int RIGHT_MOTOR = 3;
-  public static final int ELEVATOR = 7;
-  public static final int ARM = 8;
+  public static final int LEFT_FOLLOWER = 7; 
+  public static final int RIGHT_FOLLOWER = 4;
+
+  // NOT INSTALLED
+  // public static final int ELEVATOR = 7; 
+  // public static final int ARM = 8;
 
   public static final int LEFT_LINE_SENSOR = 0;
   public static final int CENTER_LINE_SENSOR = 1;
-  public static final int RIGHT_LINE_SENSOR = 3;
+  public static final int RIGHT_LINE_SENSOR = 2;
 
   //PWM IDs
-
   public static final int LEFT_JACK = 0;
   public static final int CENTER_JACK = 1;
   public static final int RIGHT_JACK = 2;
+  public static final int CENTER_DRIVE = 3;
+  public static final int HATCH_FLIPPER = 9;
 
   //LiftJack
 
   public static final double LIFT_SPEED = .5;
   public static final double RETRACT_SPEED = .7;
+  public static final double HOLD_SPEED = .25;
 
 
 }

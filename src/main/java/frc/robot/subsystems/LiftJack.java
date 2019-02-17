@@ -9,8 +9,12 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
+import edu.wpi.first.wpilibj.BuiltInAccelerometer;
+import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Robot;
 import frc.robot.RobotMap;
 
 /**
@@ -23,9 +27,14 @@ public class LiftJack extends Subsystem {
   private VictorSP rjack = new VictorSP(RobotMap.RIGHT_JACK);
   private VictorSP cjack = new VictorSP(RobotMap.CENTER_JACK);
 
+  private Talon centerDrive = new Talon(RobotMap.CENTER_DRIVE);
+
   public LiftJack() {
-    ljack.setInverted(true);
+    ljack.setInverted(false);
     rjack.setInverted(false);
+
+    // get a speed from the dash
+    liftspeed = SmartDashboard.getNumber("V", liftspeed);
   }
 
   @Override
@@ -36,13 +45,13 @@ public class LiftJack extends Subsystem {
 
   public void frontJack(double speed) {
 
-    rjack.set(speed);
+    rjack.set(-speed);
     ljack.set(speed);
   }
 
   public void liftFront() {
 
-    frontJack(RobotMap.LIFT_SPEED); 
+    frontJack(RobotMap.LIFT_SPEED * .85); 
   }
 
   public void retractFront() {
@@ -51,8 +60,12 @@ public class LiftJack extends Subsystem {
   }
 
   public void stopFront() {
-
-    frontJack(0);
+    double speed= 0.0; 
+    if (liftJackEngaged)
+    {
+      speed = 0.0;
+    }
+    frontJack(speed);
   }
 
   public void centerJack(double speed) {
@@ -71,13 +84,47 @@ public class LiftJack extends Subsystem {
   }
 
   public void stopCenter() {
+    double speed= 0.0;
 
-    centerJack(0);
+    if (liftJackEngaged) {
+      speed = 0.0;
+    }
+    centerJack(speed);
   }
 
-  public void liftRobot() {
+  double liftspeed = .30;
+  private double backspeed = liftspeed * 1.0;
+  private double r = .0250; // % adjustment
 
-    liftFront();
-    liftCenter();
+  private boolean liftJackEngaged = false;
+
+
+
+  public void liftRobot() {
+    liftJackEngaged = true;
+    // flat is currently around -.45
+    double tilt = Robot.dash.getTilt();
+    SmartDashboard.putNumber("TILT", tilt);
+    
+    // as tilt goes negative, the back is down
+    
+    if (tilt < .42) {
+      backspeed *= (1+r);
+    } else if (tilt > .52) {
+      backspeed *= (1-r);
+    }
+    
+
+    frontJack(liftspeed);
+    centerJack(backspeed);
+  }
+
+  public void driveJack(double d) {
+    centerDrive.set(d);
+  }
+
+  public void resetJack() {
+    backspeed = liftspeed;
+    liftJackEngaged = false;
   }
 }

@@ -12,8 +12,6 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.RobotMap;
-import frc.robot.commands.elevator.ElevatorFullStop;
-import frc.robot.commands.elevator.ElevatorStop;
 import frc.robot.commands.elevator.TeleArm;
 
 /**
@@ -22,8 +20,8 @@ import frc.robot.commands.elevator.TeleArm;
 public class Elevator extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
-  private TalonSRX elevator = new TalonSRX(RobotMap.ELEVATOR);
-  private TalonSRX arm = new TalonSRX(RobotMap.ARM);
+  private TalonSRX elevator = new TalonSRX(6);
+  private TalonSRX arm = new TalonSRX(6);
 
   public Elevator() {
 
@@ -36,7 +34,7 @@ public class Elevator extends Subsystem {
   }
 
   public void move(double speed) {
-    elevator.set(ControlMode.PercentOutput, speed);
+    //elevator.set(ControlMode.PercentOutput, speed);
   }
 
   public void elevatorUp() {
@@ -52,7 +50,7 @@ public class Elevator extends Subsystem {
   }
 
   public void moveArm(double speed) {
-    arm.set(ControlMode.PercentOutput, speed);
+    //arm.set(ControlMode.PercentOutput, speed);
   }
 
   public void armUp() {
