@@ -111,7 +111,7 @@ public class OI {
     //xButton.whenPressed(new ResetEncoders());
     //bButton.whenPressed(new DriveToPos(20_000));
 
-
+    startButton.whenPressed(new ResetJack());
 
   }
 }

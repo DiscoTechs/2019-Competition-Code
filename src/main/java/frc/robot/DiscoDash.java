@@ -9,7 +9,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import com.analog.adis16470.frc.ADIS16470_IMU;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.BuiltInAccelerometer;
@@ -22,20 +21,25 @@ import edu.wpi.first.wpilibj.SPI;
  */
 public class DiscoDash {
 
-    private static PowerDistributionPanel pdp = new PowerDistributionPanel();
+    private static PowerDistributionPanel pdp = new PowerDistributionPanel(10);
     private static BuiltInAccelerometer acc = new BuiltInAccelerometer();
-    public static final AHRS navx = new AHRS(SPI.Port.kMXP);
+    public final AHRS navx = new AHRS(SPI.Port.kMXP);
 
 
     private static double[] aData = new double[3];
     private static double[] pData = new double[8];
 
     public DiscoDash() {
+
+        // navx.reset();
     }
     public void update() {
         
         accelerometer();
-       // power();        
+       power();        
+
+       SmartDashboard.putNumber("Time Check", System.currentTimeMillis());
+
     }
 
     public void accelerometer() {
@@ -43,18 +47,14 @@ public class DiscoDash {
         SmartDashboard.putNumber("roll",navx.getRoll());
         SmartDashboard.putNumber("pitch", navx.getPitch());
         SmartDashboard.putNumber("yaw", navx.getYaw());
-        SmartDashboard.putNumber("angle", navx.getAngle());
 
-        SmartDashboard.putNumber("Y", navx.getRawAccelY());
-        SmartDashboard.putNumber("Z", navx.getRawAccelZ());
     }
 
     public void power() {
 
-        for (int i = 0; i < pData.length; i++) {
-            pData[i] = pdp.getCurrent(i);
-            SmartDashboard.putNumber("PDP" + i, pData[i]);
-        }
+    SmartDashboard.putNumber("PDP5", pdp.getCurrent(5));
+    SmartDashboard.putNumber("PDP4", pdp.getCurrent(4));
+    
     }
 
     public double getAngle() {

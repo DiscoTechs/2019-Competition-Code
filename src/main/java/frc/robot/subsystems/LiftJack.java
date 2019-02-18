@@ -7,13 +7,14 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.SPI;
+import frc.robot.OI;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
 
@@ -54,17 +55,20 @@ public class LiftJack extends Subsystem {
     frontJack(RobotMap.LIFT_SPEED * .85); 
   }
 
+  boolean toggle = false;
   public void retractFront() {
-    
+
+    liftJackEngaged = false;
+
     frontJack(-RobotMap.RETRACT_SPEED);
   }
 
   public void stopFront() {
     double speed= 0.0; 
-    if (liftJackEngaged)
-    {
-      speed = 0.0;
-    }
+    
+    double trig = OI.xbox.getRawAxis(3);
+
+    speed = trig * .2;
     frontJack(speed);
   }
 
@@ -87,36 +91,52 @@ public class LiftJack extends Subsystem {
     double speed= 0.0;
 
     if (liftJackEngaged) {
-      speed = 0.0;
+      speed = .15;
     }
     centerJack(speed);
   }
 
   double liftspeed = .30;
-  private double backspeed = liftspeed * 1.0;
-  private double r = .0250; // % adjustment
+  private double leftJackSpeed = liftspeed;
+  private double rightJackSpeed = liftspeed;
+  private double backJackSpeed = liftspeed;
+
+  private double r = .01; // % adjustment
 
   private boolean liftJackEngaged = false;
 
 
+  private double pitch = 0.0;
+  private double roll = 0.0;
+
+  private double threshold = 2.5;
 
   public void liftRobot() {
     liftJackEngaged = true;
     // flat is currently around -.45
-    double tilt = Robot.dash.getTilt();
-    SmartDashboard.putNumber("TILT", tilt);
+    pitch = Robot.dash.navx.getPitch();
+    roll = Robot.dash.navx.getRoll();
     
-    // as tilt goes negative, the back is down
     
-    if (tilt < .42) {
-      backspeed *= (1+r);
-    } else if (tilt > .52) {
-      backspeed *= (1-r);
+    
+    if ( roll < -threshold ) {
+      // slow down left or speed up right?
+      rightJackSpeed *= (1-r);
+    } else if (roll > threshold ){
+      rightJackSpeed *= (1+r);
     }
-    
 
-    frontJack(liftspeed);
-    centerJack(backspeed);
+    if ( pitch > threshold ) {
+      // slow down left or speed up right?
+      backJackSpeed *= (1-r);
+    } else if (pitch < -threshold ){
+      backJackSpeed *= (1+r);
+    }
+
+    ljack.set(leftJackSpeed);
+    rjack.set(-rightJackSpeed);
+    cjack.set(backJackSpeed);
+
   }
 
   public void driveJack(double d) {
@@ -124,7 +144,14 @@ public class LiftJack extends Subsystem {
   }
 
   public void resetJack() {
-    backspeed = liftspeed;
+    rightJackSpeed = liftspeed;
+    leftJackSpeed = liftspeed;
+    backJackSpeed = liftspeed;
+
     liftJackEngaged = false;
+
+    // toggle = !toggle;
   }
+
+  
 }
