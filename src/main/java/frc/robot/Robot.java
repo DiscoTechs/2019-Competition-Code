@@ -18,6 +18,7 @@ import frc.robot.commands.drive.TeleDrive;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.LiftJack;
+import frc.robot.subsystems.Manipulator;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -30,6 +31,8 @@ public class Robot extends TimedRobot {
   public static Drive drive = new Drive();
   public static Elevator elevator = new Elevator();
   public static LiftJack liftjack = new LiftJack();
+  public static Manipulator flipper = new Manipulator();
+
   public static OI m_oi;
   public static CameraServer cam;
   public static DiscoDash dash;

@@ -30,12 +30,32 @@ public class LiftJack extends Subsystem {
 
   private Talon centerDrive = new Talon(RobotMap.CENTER_DRIVE);
 
+  // Setting for lifting and moving to the platform
+  double liftspeed = .20;
+  private double leftJackSpeed = liftspeed;   // stays contant
+  private double rightJackSpeed = liftspeed;  // adjusts with roll
+  private double backJackSpeed = liftspeed;  // adjusts with pitch
+
+  // Self-leveling parameters
+  private double r = .01;
+  private double threshold = 1.5;
+
+  private boolean applyStopVoltage_front = false;
+  double frontStopVolts = .10;
+
+  private boolean applyStopVoltage_rear = false;
+  double rearStopVolts = .15;
+
+  private double pitch = 0.0;
+  private double roll = 0.0;
+
   public LiftJack() {
     ljack.setInverted(false);
-    rjack.setInverted(false);
+    rjack.setInverted(true);
 
     // get a speed from the dash
-    liftspeed = SmartDashboard.getNumber("V", liftspeed);
+    SmartDashboard.putNumber("V", .3);
+    
   }
 
   @Override
@@ -46,30 +66,29 @@ public class LiftJack extends Subsystem {
 
   public void frontJack(double speed) {
 
-    rjack.set(-speed);
+    rjack.set(speed);
     ljack.set(speed);
   }
 
   public void liftFront() {
 
-    frontJack(RobotMap.LIFT_SPEED * .85); 
+    frontJack(liftspeed); 
   }
 
-  boolean toggle = false;
   public void retractFront() {
 
-    liftJackEngaged = false;
-
+    // no need for stop voltage if we are retracting
+    applyStopVoltage_front = false;
     frontJack(-RobotMap.RETRACT_SPEED);
   }
 
   public void stopFront() {
-    double speed= 0.0; 
-    
-    double trig = OI.xbox.getRawAxis(3);
 
-    speed = trig * .2;
-    frontJack(speed);
+    if (applyStopVoltage_front) {
+      frontJack(frontStopVolts);
+    } else {
+      frontJack(0.0);
+    }
   }
 
   public void centerJack(double speed) {
@@ -84,40 +103,29 @@ public class LiftJack extends Subsystem {
 
   public void retractCenter() {
     
+    
+    applyStopVoltage_rear = false;
     centerJack(-RobotMap.LIFT_SPEED);
   }
 
   public void stopCenter() {
-    double speed= 0.0;
-
-    if (liftJackEngaged) {
-      speed = .15;
+    if (applyStopVoltage_rear) {
+      centerJack(rearStopVolts);
+    } else {
+      centerJack(0.0);
     }
-    centerJack(speed);
   }
 
-  double liftspeed = .30;
-  private double leftJackSpeed = liftspeed;
-  private double rightJackSpeed = liftspeed;
-  private double backJackSpeed = liftspeed;
-
-  private double r = .01; // % adjustment
-
-  private boolean liftJackEngaged = false;
-
-
-  private double pitch = 0.0;
-  private double roll = 0.0;
-
-  private double threshold = 2.5;
+  
 
   public void liftRobot() {
-    liftJackEngaged = true;
+    // once we start lifting, the stop voltage will keep it from falling
+    applyStopVoltage_front = true;
+    applyStopVoltage_rear = true;
+
     // flat is currently around -.45
     pitch = Robot.dash.navx.getPitch();
     roll = Robot.dash.navx.getRoll();
-    
-    
     
     if ( roll < -threshold ) {
       // slow down left or speed up right?
@@ -133,13 +141,18 @@ public class LiftJack extends Subsystem {
       backJackSpeed *= (1+r);
     }
 
+    SmartDashboard.putNumber("Lspeed", leftJackSpeed);
+    SmartDashboard.putNumber("Rspeed", rightJackSpeed);
+    SmartDashboard.putNumber("Bspeed", backJackSpeed);
+    
     ljack.set(leftJackSpeed);
-    rjack.set(-rightJackSpeed);
+    rjack.set(rightJackSpeed);
     cjack.set(backJackSpeed);
 
   }
 
   public void driveJack(double d) {
+
     centerDrive.set(d);
   }
 
@@ -148,9 +161,11 @@ public class LiftJack extends Subsystem {
     leftJackSpeed = liftspeed;
     backJackSpeed = liftspeed;
 
-    liftJackEngaged = false;
+    applyStopVoltage_front = false;
+    applyStopVoltage_rear = false;
 
-    // toggle = !toggle;
+    liftspeed = SmartDashboard.getNumber("V", liftspeed);
+    SmartDashboard.putNumber("V-actual", liftspeed);
   }
 
   

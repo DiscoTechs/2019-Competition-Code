@@ -7,8 +7,10 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
+import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.RobotMap;
 
@@ -19,11 +21,16 @@ public class Manipulator extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
-  public VictorSPX flipper = new VictorSPX(RobotMap.HATCH_FLIPPER);
+  public Talon flipper = new Talon(RobotMap.HATCH_FLIPPER);
 
   @Override
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
     // setDefaultCommand(new MySpecialCommand());
   }
+
+  public void flip(double speed) {
+    flipper.set(speed);
+  }
+
 }

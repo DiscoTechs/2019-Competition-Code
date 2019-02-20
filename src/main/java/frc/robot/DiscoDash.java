@@ -25,10 +25,6 @@ public class DiscoDash {
     private static BuiltInAccelerometer acc = new BuiltInAccelerometer();
     public final AHRS navx = new AHRS(SPI.Port.kMXP);
 
-
-    private static double[] aData = new double[3];
-    private static double[] pData = new double[8];
-
     public DiscoDash() {
 
         // navx.reset();
@@ -36,10 +32,7 @@ public class DiscoDash {
     public void update() {
         
         accelerometer();
-       power();        
-
-       SmartDashboard.putNumber("Time Check", System.currentTimeMillis());
-
+        power();        
     }
 
     public void accelerometer() {
@@ -52,9 +45,8 @@ public class DiscoDash {
 
     public void power() {
 
-    SmartDashboard.putNumber("PDP5", pdp.getCurrent(5));
-    SmartDashboard.putNumber("PDP4", pdp.getCurrent(4));
-    
+        SmartDashboard.putNumber("PDP5", pdp.getCurrent(5));
+        SmartDashboard.putNumber("PDP4", pdp.getCurrent(4));
     }
 
     public double getAngle() {

@@ -14,7 +14,11 @@ import frc.robot.commands.drive.TeleDrive;
 
 public class Drive extends Subsystem {
     TalonSRX leftDrive = new TalonSRX(RobotMap.LEFT_MOTOR);
+    TalonSRX leftFollow = new TalonSRX(RobotMap.LEFT_FOLLOWER);
+    
     TalonSRX rightDrive = new TalonSRX(RobotMap.RIGHT_MOTOR);
+    TalonSRX rightFollow = new TalonSRX(RobotMap.RIGHT_FOLLOWER);
+    
 
     // line tracers
     DigitalInput ltrace = new DigitalInput(RobotMap.LEFT_LINE_SENSOR);
@@ -23,8 +27,12 @@ public class Drive extends Subsystem {
 
     public Drive(){
         leftDrive.setInverted(false);
-        rightDrive.setInverted(true);
+        leftFollow.follow(leftDrive);
+        leftFollow.setInverted(false);
 
+        rightDrive.setInverted(true);
+        rightFollow.follow(rightDrive);
+        rightFollow.setInverted(true);
     }
 
     @Override
