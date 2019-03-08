@@ -13,8 +13,6 @@ import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.SPI;
-import frc.robot.OI;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
 
@@ -107,7 +105,7 @@ public class LiftJack extends Subsystem {
     applyStopVoltage_rear = false;
     centerJack(-RobotMap.LIFT_SPEED);
   }
-
+ 
   public void stopCenter() {
     if (applyStopVoltage_rear) {
       centerJack(rearStopVolts);
@@ -135,10 +133,9 @@ public class LiftJack extends Subsystem {
     }
 
     if ( pitch > threshold ) {
-      // slow down left or speed up right?
-      backJackSpeed *= (1-r);
+      backJackSpeed *= (1-r/1.5);
     } else if (pitch < -threshold ){
-      backJackSpeed *= (1+r);
+      backJackSpeed *= (1+r/1.5);
     }
 
     SmartDashboard.putNumber("Lspeed", leftJackSpeed);
@@ -159,7 +156,7 @@ public class LiftJack extends Subsystem {
   public void resetJack() {
     rightJackSpeed = liftspeed;
     leftJackSpeed = liftspeed;
-    backJackSpeed = liftspeed;
+    backJackSpeed = liftspeed * .8;
 
     applyStopVoltage_front = false;
     applyStopVoltage_rear = false;

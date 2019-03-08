@@ -10,7 +10,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
-import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.commands.FlipIt;
 import frc.robot.commands.LiftJack.DriveJack;
 import frc.robot.commands.LiftJack.LiftRobot;
@@ -18,16 +17,9 @@ import frc.robot.commands.LiftJack.ResetJack;
 import frc.robot.commands.LiftJack.RetractCenter;
 import frc.robot.commands.LiftJack.RetractFront;
 import frc.robot.commands.LiftJack.StopLiftJack;
-import frc.robot.commands.drive.DriveToPos;
-import frc.robot.commands.drive.ResetEncoders;
-import frc.robot.commands.drive.TeleDrive;
-import frc.robot.commands.elevator.ElevatorArmDown;
-import frc.robot.commands.elevator.ElevatorArmStop;
-import frc.robot.commands.elevator.ElevatorArmUp;
-import frc.robot.commands.elevator.ElevatorDown;
-import frc.robot.commands.elevator.ElevatorStop;
-import frc.robot.commands.elevator.ElevatorUp;
-import frc.robot.commands.elevator.TeleArm;
+import frc.robot.commands.drive.StopLineTracing;
+import frc.robot.commands.drive.ToCargoShip;
+import frc.robot.subsystems.Drive;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -68,6 +60,7 @@ public class OI {
 
   public OI(){
     
+    // XBOX Controls
     Button aButton = new JoystickButton(xbox, RobotMap.A_BUTTON);
     Button bButton = new JoystickButton(xbox, RobotMap.B_BUTTON);
     Button xButton = new JoystickButton(xbox, RobotMap.X_BUTTON);
@@ -77,7 +70,11 @@ public class OI {
     Button backButton = new JoystickButton(xbox, RobotMap.BACK_BUTTON);
     Button startButton = new JoystickButton(xbox, RobotMap.START_BUTTON);
 
+    // Driver Stick Controls
+    Button rightButton2 = new JoystickButton(rstick, 2);
     Button rightButton3 = new JoystickButton(rstick, 3);
+    Button rightButton6 = new JoystickButton(rstick, 6);
+    Button rightButton11 = new JoystickButton(rstick, 11);
 
     //lift jack
     rBumper.whenPressed(new LiftRobot());
@@ -89,8 +86,9 @@ public class OI {
     backButton.whenPressed(new RetractCenter());
     backButton.whenReleased(new StopLiftJack());
 
-    rightButton3.whenPressed(new DriveJack(.30));
-    rightButton3.whenReleased(new DriveJack(0.0));
+    // Mini Flipper
+    bButton.whenPressed(new FlipIt(-1.2));
+    aButton.whenPressed(new FlipIt(1.0));
 
     startButton.whenPressed(new ResetJack());
 
@@ -111,10 +109,32 @@ public class OI {
     //xButton.whenPressed(new ResetEncoders());
     //bButton.whenPressed(new DriveToPos(20_000));
 
-    // Mini Flipper
-    bButton.whenPressed(new FlipIt(-1.2));
-    aButton.whenPressed(new FlipIt(1.0));
-    
- 
+    // Driver Controls
+    rightButton3.whenPressed(new DriveJack(.30));
+    rightButton3.whenReleased(new DriveJack(0.0));
+
+    rightButton2.whenPressed(new DriveJack(-.30));
+    rightButton2.whenReleased(new DriveJack(0.0));
+
+    rightButton6.whenPressed(new ToCargoShip(Drive.LEFT));
+    rightButton6.whenReleased(new StopLineTracing());
+
+    rightButton11.whenPressed(new ToCargoShip(Drive.RIGHT));
+    rightButton11.whenReleased(new StopLineTracing());
+
+    // close all the buttons?
+    aButton.close();
+    bButton.close();
+    xButton.close();
+    yButton.close();
+    rBumper.close();
+    lBumper.close();
+    backButton.close();
+    startButton.close();
+
+    rightButton2.close();
+    rightButton3.close();
+    rightButton6.close();
+    rightButton11.close();
   }
 }

@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.SPI;
 
@@ -22,17 +21,23 @@ import edu.wpi.first.wpilibj.SPI;
 public class DiscoDash {
 
     private static PowerDistributionPanel pdp = new PowerDistributionPanel(10);
-    private static BuiltInAccelerometer acc = new BuiltInAccelerometer();
     public final AHRS navx = new AHRS(SPI.Port.kMXP);
 
     public DiscoDash() {
 
         // navx.reset();
     }
+
     public void update() {
         
         accelerometer();
-        power();        
+        power();
+        
+        boolean[] tracers = Robot.drive.getLineTracers();
+        SmartDashboard.putBoolean("LT", tracers[0]);
+        SmartDashboard.putBoolean("CT", tracers[1]);
+        SmartDashboard.putBoolean("RT", tracers[2]);
+        
     }
 
     public void accelerometer() {

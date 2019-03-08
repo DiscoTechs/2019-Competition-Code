@@ -69,28 +69,51 @@ public class Drive extends Subsystem {
         return rightDrive.getSelectedSensorPosition();
     }
 
-    double traceSpeed = 0.4;
+    double traceSpeed = 0.2;
     public void traceLine() {
-        if (ltrace.get() == true) {
-            //drive right
-            leftDrive.set(ControlMode.PercentOutput, 0);
+
+        if (ctrace.get() == false){
+
+            leftDrive.set(ControlMode.PercentOutput, traceSpeed);
             rightDrive.set(ControlMode.PercentOutput, traceSpeed);
             
-        }
-        else if (rtrace.get() == true){
-//drive left
-         leftDrive.set(ControlMode.PercentOutput, traceSpeed);
-        rightDrive.set(ControlMode.PercentOutput, 0);
+        } else if (ltrace.get() == false) {   //drive right
+            leftDrive.set(ControlMode.PercentOutput, -traceSpeed / 2);
+            rightDrive.set(ControlMode.PercentOutput, traceSpeed / 2);
             
-        } else if (ctrace.get() == true){
+        } else if (rtrace.get() == false) {
+            //drive left
+            leftDrive.set(ControlMode.PercentOutput, traceSpeed / 2);
+            rightDrive.set(ControlMode.PercentOutput, -traceSpeed / 2); 
+        } 
 
-            leftDrive.set(ControlMode.PercentOutput, 0);
-        rightDrive.set(ControlMode.PercentOutput, 0);
 
+    }
+    private boolean lineFound = false;
+
+    public boolean islineFound(){
+        return lineFound;
+    }
+
+    public void resetLineFound(){
+        lineFound = false;
+    }
+
+
+    public static final int RIGHT = 1;
+    public static final int LEFT = -1;
+    public boolean findLine(int direction){
+
+        if (ctrace.get() == true){
+            leftDrive.set(ControlMode.PercentOutput, direction * 0.15);
+            rightDrive.set(ControlMode.PercentOutput, -direction * 0.15);
         } else {
-
+            leftDrive.set(ControlMode.PercentOutput, 0);
+            rightDrive.set(ControlMode.PercentOutput, 0);
+            lineFound = true;
         }
 
+        return lineFound;
     }
 
     public void driveAtAngle(double angle) {
@@ -106,6 +129,16 @@ public class Drive extends Subsystem {
             // drive equal
         }
 
+    }
+
+    public boolean[] getLineTracers() {
+        boolean[] tracers = new boolean[3];
+
+        tracers[0] = ltrace.get();
+        tracers[1] = ctrace.get();
+        tracers[2] = rtrace.get();
+        
+        return tracers;
     }
     
 }
