@@ -11,10 +11,25 @@ import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 
 public class RetractCenter extends Command {
+
+  public static final int RETRACT = 1;
+  public static final int EXTEND = 2;
+
+  private int direction = RETRACT;
+
   public RetractCenter() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     requires(Robot.liftjack);
+    direction = RETRACT;
+  }
+
+  public RetractCenter(int direction) {
+    // Use requires() here to declare subsystem dependencies
+    // eg. requires(chassis);
+    requires(Robot.liftjack);
+    this.direction = direction;
+
   }
 
   // Called just before this Command runs the first time
@@ -25,7 +40,12 @@ public class RetractCenter extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.liftjack.retractCenter();
+
+    if (direction == EXTEND) {  
+      Robot.liftjack.extendRear();
+    } else {
+      Robot.liftjack.retractCenter();
+    }
   }
 
   // Make this return true when this Command no longer needs to run execute()

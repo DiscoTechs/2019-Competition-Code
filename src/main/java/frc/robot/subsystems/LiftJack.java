@@ -7,7 +7,7 @@
 
 package frc.robot.subsystems;
 
-import com.kauailabs.navx.frc.AHRS;
+//import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.VictorSP;
@@ -29,13 +29,18 @@ public class LiftJack extends Subsystem {
   private Talon centerDrive = new Talon(RobotMap.CENTER_DRIVE);
 
   // Setting for lifting and moving to the platform
-  double liftspeed = .20;
+  // ++++++++++++++++++++++++++++++++
+  double liftspeed = .70;
+  // ++++++++++++++++++++++++++++++++
+
   private double leftJackSpeed = liftspeed;   // stays contant
   private double rightJackSpeed = liftspeed;  // adjusts with roll
-  private double backJackSpeed = liftspeed;  // adjusts with pitch
+  private double backJackSpeed = liftspeed * 1.25;  // adjusts with pitch
 
   // Self-leveling parameters
-  private double r = .01;
+  private double pitch_0 = Robot.dash.navx.getPitch();
+  private double roll_0 = Robot.dash.navx.getRoll();
+  private double r = .02;
   private double threshold = 1.5;
 
   private boolean applyStopVoltage_front = false;
@@ -52,8 +57,7 @@ public class LiftJack extends Subsystem {
     rjack.setInverted(true);
 
     // get a speed from the dash
-    SmartDashboard.putNumber("V", .3);
-    
+    SmartDashboard.putNumber("V", liftspeed);
   }
 
   @Override
@@ -62,67 +66,11 @@ public class LiftJack extends Subsystem {
     // setDefaultCommand(new MySpecialCommand());
   }
 
-  public void frontJack(double speed) {
+  //
+  // ======= FRONT CONTROLS ==========
+  // 
 
-    rjack.set(speed);
-    ljack.set(speed);
-  }
-
-  public void liftFront() {
-
-    frontJack(liftspeed); 
-  }
-
-  public void retractFront() {
-
-    // no need for stop voltage if we are retracting
-    applyStopVoltage_front = false;
-    frontJack(-RobotMap.RETRACT_SPEED);
-  }
-
-  public void stopFront() {
-
-    if (applyStopVoltage_front) {
-      frontJack(frontStopVolts);
-    } else {
-      frontJack(0.0);
-    }
-  }
-
-  public void centerJack(double speed) {
-
-    cjack.set(speed);
-  }
-
-  public void liftCenter() {
-
-    centerJack(RobotMap.LIFT_SPEED); 
-  }
-
-  public void retractCenter() {
-    
-    
-    applyStopVoltage_rear = false;
-    centerJack(-RobotMap.LIFT_SPEED);
-  }
- 
-  public void stopCenter() {
-    if (applyStopVoltage_rear) {
-      centerJack(rearStopVolts);
-    } else {
-      centerJack(0.0);
-    }
-  }
-
-  
-
-  public void liftRobot() {
-    // once we start lifting, the stop voltage will keep it from falling
-    applyStopVoltage_front = true;
-    applyStopVoltage_rear = true;
-
-    // flat is currently around -.45
-    pitch = Robot.dash.navx.getPitch();
+  public void balanceFrontSpeeds() {
     roll = Robot.dash.navx.getRoll();
     
     if ( roll < -threshold ) {
@@ -131,38 +79,108 @@ public class LiftJack extends Subsystem {
     } else if (roll > threshold ){
       rightJackSpeed *= (1+r);
     }
+  }
 
-    if ( pitch > threshold ) {
-      backJackSpeed *= (1-r/1.5);
-    } else if (pitch < -threshold ){
-      backJackSpeed *= (1+r/1.5);
+  public void frontDirectDrive(double speed) {
+
+    rjack.set(speed);
+    ljack.set(speed);
+    update();
+  }
+
+  public void retractFront() {
+    // no need for stop voltage if we are retracting
+    applyStopVoltage_front = false;
+    frontDirectDrive(-liftspeed);
+    update();
+  }
+
+  public void extendFront() {
+
+    // extending should trigger stopVoltage
+    applyStopVoltage_front = true;
+
+    balanceCenterSpeed();
+    rjack.set(rightJackSpeed);
+    ljack.set(leftJackSpeed);
+    update();
+  }
+
+  public void stopFront() {
+
+    if (applyStopVoltage_front) {
+      frontDirectDrive(frontStopVolts);
+    } else {
+      frontDirectDrive(0.0);
     }
+  }
+
+  //
+  // ======= REAR/CENTER CONTROLS ==========
+  // 
+  public void balanceCenterSpeed() {
+    pitch = Robot.dash.navx.getPitch();
+    
+    if ( pitch > threshold ) {
+      backJackSpeed *= (1-r);
+    } else if (pitch < -threshold ){
+      backJackSpeed *= (1+r);
+    }
+  }
+
+  public void centerJack(double speed) {
+    cjack.set(speed);
+    update();
+  }
+
+  public void retractCenter() {
+    applyStopVoltage_rear = false;
+    centerJack(-liftspeed);
+  }
+ 
+  public void extendRear() {
+    applyStopVoltage_rear = true;
+    balanceCenterSpeed();
+    centerJack(backJackSpeed); 
+  }
+
+  public void stopCenter() {
+    if (applyStopVoltage_rear) {
+      centerJack(rearStopVolts);
+    } else {
+      centerJack(0.0);
+    }
+  }
+
+  //
+  // ======= GENERAL CONTROLS ==========
+  // 
+  public void update() {
 
     SmartDashboard.putNumber("Lspeed", leftJackSpeed);
     SmartDashboard.putNumber("Rspeed", rightJackSpeed);
     SmartDashboard.putNumber("Bspeed", backJackSpeed);
-    
-    ljack.set(leftJackSpeed);
-    rjack.set(rightJackSpeed);
-    cjack.set(backJackSpeed);
-
   }
 
+  // forward and backward with the extended wheel
   public void driveJack(double d) {
-
     centerDrive.set(d);
   }
 
   public void resetJack() {
     rightJackSpeed = liftspeed;
     leftJackSpeed = liftspeed;
-    backJackSpeed = liftspeed * .8;
+    backJackSpeed = liftspeed;
 
     applyStopVoltage_front = false;
     applyStopVoltage_rear = false;
 
     liftspeed = SmartDashboard.getNumber("V", liftspeed);
     SmartDashboard.putNumber("V-actual", liftspeed);
+
+    // let's try setting the level points based on the current pitch and rol
+    pitch_0 = Robot.dash.navx.getPitch();
+    roll_0 = Robot.dash.navx.getRoll();
   }
 
   

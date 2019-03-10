@@ -7,7 +7,7 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+//import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.commands.elevator.TeleArm;
@@ -18,8 +18,8 @@ import frc.robot.commands.elevator.TeleArm;
 public class Elevator extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
-  private TalonSRX elevator = new TalonSRX(6);
-  private TalonSRX arm = new TalonSRX(6);
+  //private TalonSRX elevator = new TalonSRX(6);
+  //private TalonSRX arm = new TalonSRX(6);
 
   public Elevator() {
 

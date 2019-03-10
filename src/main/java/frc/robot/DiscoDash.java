@@ -52,6 +52,9 @@ public class DiscoDash {
 
         SmartDashboard.putNumber("PDP5", pdp.getCurrent(5));
         SmartDashboard.putNumber("PDP4", pdp.getCurrent(4));
+        SmartDashboard.putNumber("PDP6", pdp.getCurrent(6));
+        SmartDashboard.putNumber("PDP7", pdp.getCurrent(7));
+        SmartDashboard.putNumber("PDP11", pdp.getCurrent(11));
     }
 
     public double getAngle() {

@@ -83,11 +83,4 @@ public class RobotMap {
   public static final int CENTER_DRIVE = 3;
   public static final int HATCH_FLIPPER = 9;
 
-  //LiftJack
-
-  public static final double LIFT_SPEED = .5;
-  public static final double RETRACT_SPEED = .7;
-  public static final double HOLD_SPEED = .25;
-
-
 }

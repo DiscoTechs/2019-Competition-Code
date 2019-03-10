@@ -28,7 +28,8 @@ public class LiftRobot extends Command {
   @Override
   protected void execute() {
 
-    Robot.liftjack.liftRobot();
+    Robot.liftjack.extendFront();
+    Robot.liftjack.extendRear();
     
   }
 

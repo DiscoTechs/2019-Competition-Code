@@ -11,7 +11,9 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import frc.robot.commands.FlipIt;
+import frc.robot.commands.TimedDrive;
 import frc.robot.commands.LiftJack.DriveJack;
+import frc.robot.commands.LiftJack.ExtendFront;
 import frc.robot.commands.LiftJack.LiftRobot;
 import frc.robot.commands.LiftJack.ResetJack;
 import frc.robot.commands.LiftJack.RetractCenter;
@@ -69,28 +71,47 @@ public class OI {
     Button lBumper = new JoystickButton(xbox, RobotMap.LEFT_BUMPER);
     Button backButton = new JoystickButton(xbox, RobotMap.BACK_BUTTON);
     Button startButton = new JoystickButton(xbox, RobotMap.START_BUTTON);
+    Button rightPadButton = new JoystickButton(xbox, 10);
+
 
     // Driver Stick Controls
     Button rightButton2 = new JoystickButton(rstick, 2);
     Button rightButton3 = new JoystickButton(rstick, 3);
+    Button rightButton4 = new JoystickButton(rstick, 4);
+    Button rightButton5 = new JoystickButton(rstick, 5);
     Button rightButton6 = new JoystickButton(rstick, 6);
     Button rightButton11 = new JoystickButton(rstick, 11);
 
+    Button leftButton8 = new JoystickButton(lstick, 8);
+    Button leftButton9 = new JoystickButton(lstick, 9);
+
     //lift jack
-    rBumper.whenPressed(new LiftRobot());
+    rBumper.whenPressed(new ExtendFront());
     rBumper.whenReleased(new StopLiftJack());
 
     lBumper.whenPressed(new RetractFront());
     lBumper.whenReleased(new StopLiftJack());
 
-    backButton.whenPressed(new RetractCenter());
+    backButton.whenPressed(new RetractCenter(RetractCenter.RETRACT));
     backButton.whenReleased(new StopLiftJack());
+
+    rightPadButton.whenPressed(new RetractCenter(RetractCenter.EXTEND));
+    rightPadButton.whenReleased(new StopLiftJack());
+
+    yButton.whenPressed(new LiftRobot());
+    yButton.whenReleased(new StopLiftJack());
 
     // Mini Flipper
     bButton.whenPressed(new FlipIt(-1.2));
+    bButton.whenReleased(new FlipIt(0.0));
+    
     aButton.whenPressed(new FlipIt(1.0));
+    aButton.whenReleased(new FlipIt(0.0));
 
     startButton.whenPressed(new ResetJack());
+
+    
+
 
     //elevator
     // aButton.whenPressed(new ElevatorDown());
@@ -103,8 +124,6 @@ public class OI {
     // xButton.whileHeld(new ElevatorArmDown());
     // xButton.whenReleased(new ElevatorArmStop());
 
-    // yButton.whenPressed(new ElevatorArmUp());
-    // yButton.whenReleased(new ElevatorArmStop());
 
     //xButton.whenPressed(new ResetEncoders());
     //bButton.whenPressed(new DriveToPos(20_000));
@@ -116,11 +135,14 @@ public class OI {
     rightButton2.whenPressed(new DriveJack(-.30));
     rightButton2.whenReleased(new DriveJack(0.0));
 
-    rightButton6.whenPressed(new ToCargoShip(Drive.LEFT));
-    rightButton6.whenReleased(new StopLineTracing());
+    rightButton4.whenPressed(new ToCargoShip(Drive.LEFT));
+    rightButton4.whenReleased(new StopLineTracing());
 
-    rightButton11.whenPressed(new ToCargoShip(Drive.RIGHT));
-    rightButton11.whenReleased(new StopLineTracing());
+    rightButton5.whenPressed(new ToCargoShip(Drive.RIGHT));
+    rightButton5.whenReleased(new StopLineTracing());
+
+    leftButton8.whenPressed(new TimedDrive(.5, .66));
+    leftButton9.whenPressed(new TimedDrive(1.0, .5));
 
     // close all the buttons?
     aButton.close();
@@ -131,10 +153,16 @@ public class OI {
     lBumper.close();
     backButton.close();
     startButton.close();
+    rightPadButton.close();
 
     rightButton2.close();
     rightButton3.close();
+    rightButton4.close();
+    rightButton5.close();
     rightButton6.close();
     rightButton11.close();
+
+    leftButton8.close();
+    leftButton9.close();
   }
 }

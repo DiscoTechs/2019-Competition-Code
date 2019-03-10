@@ -5,61 +5,38 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
+package frc.robot.commands.LiftJack;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 
-public class FlipIt extends Command {
-
-  public double direction = 1;
-  private long startTime = 0;
-  private boolean flipping = false;
-
-  public FlipIt(double direction) {
+public class ExtendFront extends Command {
+  public ExtendFront() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
-    requires(Robot.flipper);
-    this.direction = direction;
+    requires(Robot.liftjack);
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-
-    if (!flipping) {
-      startTime = System.currentTimeMillis();
-      flipping = true;
-    }
-
-    Robot.flipper.flip(.2 * direction);
-    Robot.dash.update();
+    Robot.liftjack.extendFront();
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    /* if (System.currentTimeMillis() - startTime > 400) {
-      flipping = false;
-      return true;
-    } else {
-      return false;
-    }
- */
-  return (Math.abs(direction) < .005);
+    return false;
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    Robot.flipper.flip(0);
-
   }
 
   // Called when another command which requires one or more of the same

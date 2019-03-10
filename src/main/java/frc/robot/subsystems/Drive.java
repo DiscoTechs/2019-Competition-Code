@@ -69,22 +69,35 @@ public class Drive extends Subsystem {
         return rightDrive.getSelectedSensorPosition();
     }
 
-    double traceSpeed = 0.2;
+    double traceSpeed = 0.28;
     public void traceLine() {
 
-        if (ctrace.get() == false){
+        // tracer ? true = NO : false = YES;
+        int traceState = rtrace.get() ? 0 : 1;
+        traceState += ctrace.get() ? 0 : 2;
+        traceState += ltrace.get() ? 0 : 4;
+        
+        // 000      0   do nothing
+        // 001      1   rotate right (CW)
+        // 010      2   go straight;
+        // 011      3   rotate right (CW)
+        // 100      4   rotate left (CCW)
+        // 101      5   impossible?
+        // 110      6   rotate left (CCW)
+        // 111      7   Perpendicular?
+
+        if (traceState == 2 ){
 
             leftDrive.set(ControlMode.PercentOutput, traceSpeed);
             rightDrive.set(ControlMode.PercentOutput, traceSpeed);
             
-        } else if (ltrace.get() == false) {   //drive right
-            leftDrive.set(ControlMode.PercentOutput, -traceSpeed / 2);
-            rightDrive.set(ControlMode.PercentOutput, traceSpeed / 2);
+        } else if (traceState == 1 || traceState == 3 ) {   // CW
+            leftDrive.set(ControlMode.PercentOutput, traceSpeed * .75);
+            rightDrive.set(ControlMode.PercentOutput, -traceSpeed * .75);
             
-        } else if (rtrace.get() == false) {
-            //drive left
-            leftDrive.set(ControlMode.PercentOutput, traceSpeed / 2);
-            rightDrive.set(ControlMode.PercentOutput, -traceSpeed / 2); 
+        } else if (traceState == 4 || traceState == 6  ) {
+            leftDrive.set(ControlMode.PercentOutput, -traceSpeed * .75);
+            rightDrive.set(ControlMode.PercentOutput, traceSpeed * .75); 
         } 
 
 
@@ -105,8 +118,8 @@ public class Drive extends Subsystem {
     public boolean findLine(int direction){
 
         if (ctrace.get() == true){
-            leftDrive.set(ControlMode.PercentOutput, direction * 0.15);
-            rightDrive.set(ControlMode.PercentOutput, -direction * 0.15);
+            leftDrive.set(ControlMode.PercentOutput, direction * 0.22);
+            rightDrive.set(ControlMode.PercentOutput, -direction * 0.22);
         } else {
             leftDrive.set(ControlMode.PercentOutput, 0);
             rightDrive.set(ControlMode.PercentOutput, 0);
